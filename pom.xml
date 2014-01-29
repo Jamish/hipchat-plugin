@@ -18,12 +18,12 @@
     </parent>
 
     <!-- keeping original groupId -->
-    <groupId>org.jvnet.hudson.plugins</groupId>
-	<artifactId>hipchat</artifactId>
+    <groupId>org.firespring.hudson.plugins</groupId>
+	<artifactId>hipchatJamish</artifactId>
 	<packaging>hpi</packaging>
-	<version>0.1.5-SNAPSHOT</version>
-	<name>Jenkins HipChat Plugin</name>
-	<description>A Build status publisher that notifies channels on a HipChat server</description>
+	<version>0.1.5-SNAPSHOT-Jamish</version>
+	<name>Jenkins HipChat Plugin - Jamish Edition</name>
+	<description>A Build status publisher that notifies channels on a HipChat server (With Users)</description>
     <url>http://wiki.jenkins-ci.org/display/JENKINS/HipChat+Plugin</url>
 
     <properties>
@@ -46,9 +46,9 @@
     </distributionManagement>
 
     <scm>
-        <connection>scm:git:ssh://github.com/jenkinsci/hipchat-plugin.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/jenkinsci/hipchat-plugin.git</developerConnection>
-        <url>https://github.com/jenkinsci/hipchat-plugin</url>
+        <connection>scm:git:ssh://github.com/Jamish/hipchat-plugin.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/Jamish/hipchat-plugin.git</developerConnection>
+        <url>https://github.com/Jamish/hipchat-plugin</url>
     </scm>
 
 	<dependencies>

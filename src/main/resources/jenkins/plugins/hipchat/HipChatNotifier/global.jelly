@@ -11,7 +11,7 @@
     tags they use. Views are always organized according to its owner class,
     so it should be straightforward to find them.
   -->
-<f:section title="Global HipChat Notifier Settings">
+<f:section title="Global HipChat Notifier Settings - Jamish">
     <f:entry title="API Token" help="${rootURL}/plugin/hipchat/help-globalConfig-hipChatToken.html">
         <f:textbox name="hipChatToken" value="${descriptor.getToken()}" />
     </f:entry>
@@ -23,6 +23,9 @@
     </f:entry>
     <f:entry title="Send As" help="${rootURL}/plugin/hipchat/help-globalConfig-hipChatSendAs.html">
         <f:textbox name="hipChatSendAs" value="${descriptor.getSendAs()}" />
+    </f:entry>
+	<f:entry title="Github-To-Hipchat Usernames" help="${rootURL}/plugin/hipchat/help-globalConfig-hipChatUserTable.html">
+        <f:textbox name="hipChatUsernameTable" value="${descriptor.getUsernameTable()}" />
     </f:entry>
   </f:section>
 </j:jelly>

@@ -26,6 +26,7 @@ public class ActiveNotifier implements FineGrainedNotifier {
     public ActiveNotifier(HipChatNotifier notifier) {
         super();
         this.notifier = notifier;
+		//logger.info("ActiveNotifier(): " + notifier.getUsernameTable());
     }
 
     private HipChatService getHipChat(AbstractBuild r) {
@@ -38,6 +39,7 @@ public class ActiveNotifier implements FineGrainedNotifier {
     }
 
     public void started(AbstractBuild build) {
+		//logger.info("Jamish - Build Started!");
         String changes = getChanges(build);
         CauseAction cause = build.getAction(CauseAction.class);
 
@@ -118,6 +120,7 @@ public class ActiveNotifier implements FineGrainedNotifier {
 
     String getBuildStatusMessage(AbstractBuild r) {
         MessageBuilder message = new MessageBuilder(notifier, r);
+		//message.appendUserIfBroken();
         message.appendStatusMessage();
         message.appendDuration();
         return message.appendOpenLink().toString();
@@ -132,6 +135,7 @@ public class ActiveNotifier implements FineGrainedNotifier {
             this.notifier = notifier;
             this.message = new StringBuffer();
             this.build = build;
+			logger.info("MessageBuilder(): " +notifier.getUsernameTable());
             startMessage();
         }
 
@@ -164,6 +168,7 @@ public class ActiveNotifier implements FineGrainedNotifier {
         }
 
         private MessageBuilder startMessage() {
+			this.appendUser();
             message.append(build.getProject().getDisplayName());
             message.append(" - ");
             message.append(build.getDisplayName());
@@ -173,9 +178,67 @@ public class ActiveNotifier implements FineGrainedNotifier {
 
         public MessageBuilder appendOpenLink() {
             String url = notifier.getBuildServerUrl() + build.getUrl();
-            message.append(" (<a href='").append(url).append("'>Open</a>)");
+            //message.append(" (<a href='").append(url).append("'>Open</a>)");
+			message.append("(").append(url).append(")");
             return this;
         }
+		
+		public MessageBuilder appendUser() {
+
+			//logger.info("jamish butts - " + butts);
+			/*if (build.isBuilding()) {
+                return this;
+            }
+			
+            Result result = build.getResult();
+            if (result != Result.SUCCESS) {*/
+			if (!build.hasChangeSetComputed()) {
+				logger.info("No change set computed...");
+				return this;
+			}
+			ChangeLogSet changeSet = build.getChangeSet();
+			List<Entry> entries = new LinkedList<Entry>();
+			Set<AffectedFile> files = new HashSet<AffectedFile>();
+			for (Object o : changeSet.getItems()) {
+				Entry entry = (Entry) o;
+				logger.info("Entry " + o);
+				entries.add(entry);
+				files.addAll(entry.getAffectedFiles());
+			}
+			
+			String author = "";
+			//If there are no entries, use the short description. Otherwise, use the most recent checkin's author.
+			if (entries.isEmpty()) {
+				logger.info("Empty change, searching description");
+				CauseAction cause = build.getAction(CauseAction.class);
+				author = cause.getShortDescription().replace("Started by user ", ""); //#YOLO #NotJank
+			} else {
+				author = entries.get(0).getAuthor().getDisplayName();
+			}
+
+			//Get the list of Github/Hipchat users and parse them.
+			String usernames = notifier.getUsernameTable();
+			
+			String[] pairs = usernames.trim().split(";");
+			for (String pair : pairs) {
+				//Search the pairs for a match.
+				String[] pairSplit = pair.trim().split(" ");
+				String githubName = pairSplit[0];
+				String hipchatName = pairSplit[1];
+				
+				if (author.equals(githubName))
+				{
+					author = hipchatName;
+					break;
+				}
+			}
+			
+			if (!author.trim().equals("")) {
+				message.append("@").append(author).append(" ");
+			}
+
+            return this;
+		}
 
         public MessageBuilder appendDuration() {
             message.append(" after ");

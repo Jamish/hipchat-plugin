@@ -25,6 +25,7 @@ public class HipChatNotifier extends Notifier {
     private String buildServerUrl;
     private String room;
     private String sendAs;
+	private String usernameTable;
 
     @Override
     public DescriptorImpl getDescriptor() {
@@ -46,6 +47,11 @@ public class HipChatNotifier extends Notifier {
     public String getSendAs() {
         return sendAs;
     }
+	
+	public String getUsernameTable() {
+		//logger.info("getUsernameTable(): " + usernameTable);
+		return usernameTable;
+	}
 
     public void setBuildServerUrl(final String buildServerUrl) {
         this.buildServerUrl = buildServerUrl;
@@ -62,14 +68,20 @@ public class HipChatNotifier extends Notifier {
     public void setSendAs(final String sendAs) {
         this.sendAs = sendAs;
     }
+	
+	public void setUsernameTable(final String usernameTable) {
+		this.usernameTable = usernameTable;
+	}
 
     @DataBoundConstructor
-    public HipChatNotifier(final String authToken, final String room, String buildServerUrl, final String sendAs) {
+    public HipChatNotifier(final String authToken, final String room, String buildServerUrl, final String sendAs, final String usernameTable) {
         super();
         this.authToken = authToken;
         this.buildServerUrl = buildServerUrl;
         this.room = room;
         this.sendAs = sendAs;
+		this.usernameTable = usernameTable;
+		//logger.info("HipChatNotifier: " + usernameTable);
     }
 
     public BuildStepMonitor getRequiredMonitorService() {
@@ -91,6 +103,7 @@ public class HipChatNotifier extends Notifier {
         private String room;
         private String buildServerUrl;
         private String sendAs;
+		private String usernameTable;
 
         public DescriptorImpl() {
             load();
@@ -111,6 +124,10 @@ public class HipChatNotifier extends Notifier {
         public String getSendAs() {
             return sendAs;
         }
+		
+		public String getUsernameTable() {
+			return usernameTable;
+		}
 
         public boolean isApplicable(Class<? extends AbstractProject> aClass) {
             return true;
@@ -122,7 +139,9 @@ public class HipChatNotifier extends Notifier {
             if (buildServerUrl == null) buildServerUrl = sr.getParameter("hipChatBuildServerUrl");
             if (room == null) room = sr.getParameter("hipChatRoom");
             if (sendAs == null) sendAs = sr.getParameter("hipChatSendAs");
-            return new HipChatNotifier(token, room, buildServerUrl, sendAs);
+			if (usernameTable == null) usernameTable = sr.getParameter("hipChatUsernameTable");
+			//logger.info("Jamish - newInstance() usernameTable is " + usernameTable);
+            return new HipChatNotifier(token, room, buildServerUrl, sendAs, usernameTable);
         }
 
         @Override
@@ -131,11 +150,13 @@ public class HipChatNotifier extends Notifier {
             room = sr.getParameter("hipChatRoom");
             buildServerUrl = sr.getParameter("hipChatBuildServerUrl");
             sendAs = sr.getParameter("hipChatSendAs");
+			usernameTable = sr.getParameter("hipChatUsernameTable");
+			//logger.info("Jamish - configure() usernameTable is " + usernameTable);
             if (buildServerUrl != null && !buildServerUrl.endsWith("/")) {
                 buildServerUrl = buildServerUrl + "/";
             }
             try {
-                new HipChatNotifier(token, room, buildServerUrl, sendAs);
+                new HipChatNotifier(token, room, buildServerUrl, sendAs, usernameTable);
             } catch (Exception e) {
                 throw new FormException("Failed to initialize notifier - check your global notifier configuration settings", e, "");
             }
@@ -145,7 +166,7 @@ public class HipChatNotifier extends Notifier {
 
         @Override
         public String getDisplayName() {
-            return "HipChat Notifications";
+            return "HipChat Notifications - Jamish";
         }
     }
 
