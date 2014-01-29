@@ -24,7 +24,7 @@
 	<version>0.1.5-SNAPSHOT-Jamish</version>
 	<name>Jenkins HipChat Plugin - Jamish Edition</name>
 	<description>A Build status publisher that notifies channels on a HipChat server (With Users)</description>
-    <url>http://wiki.jenkins-ci.org/display/JENKINS/HipChat+Plugin</url>
+    <url>https://github.com/Jamish/hipchat-plugin</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

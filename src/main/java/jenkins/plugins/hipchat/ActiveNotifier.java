@@ -149,11 +149,11 @@ public class ActiveNotifier implements FineGrainedNotifier {
                 return "Starting...";
             }
             Result result = r.getResult();
-            if (result == Result.SUCCESS) return "Success";
-            if (result == Result.FAILURE) return "<b>FAILURE</b>";
-            if (result == Result.ABORTED) return "ABORTED";
-            if (result == Result.NOT_BUILT) return "Not built";
-            if (result == Result.UNSTABLE) return "Unstable";
+            if (result == Result.SUCCESS) return "Success (fonzie)";
+            if (result == Result.FAILURE) return "FAILURE (failed)";
+            if (result == Result.ABORTED) return "ABORTED (nothingtodohere)";
+            if (result == Result.NOT_BUILT) return "Not built (notsureif)";
+            if (result == Result.UNSTABLE) return "Unstable (facepalm)";
             return "Unknown";
         }
 
@@ -179,42 +179,16 @@ public class ActiveNotifier implements FineGrainedNotifier {
         public MessageBuilder appendOpenLink() {
             String url = notifier.getBuildServerUrl() + build.getUrl();
             //message.append(" (<a href='").append(url).append("'>Open</a>)");
-			message.append("(").append(url).append(")");
+			message.append(" (").append(url).append(")");
             return this;
         }
 		
-		public MessageBuilder appendUser() {
-
-			//logger.info("jamish butts - " + butts);
-			/*if (build.isBuilding()) {
-                return this;
-            }
-			
-            Result result = build.getResult();
-            if (result != Result.SUCCESS) {*/
-			if (!build.hasChangeSetComputed()) {
-				logger.info("No change set computed...");
-				return this;
-			}
-			ChangeLogSet changeSet = build.getChangeSet();
-			List<Entry> entries = new LinkedList<Entry>();
-			Set<AffectedFile> files = new HashSet<AffectedFile>();
-			for (Object o : changeSet.getItems()) {
-				Entry entry = (Entry) o;
-				logger.info("Entry " + o);
-				entries.add(entry);
-				files.addAll(entry.getAffectedFiles());
-			}
-			
+		public MessageBuilder appendUser() {		
 			String author = "";
-			//If there are no entries, use the short description. Otherwise, use the most recent checkin's author.
-			if (entries.isEmpty()) {
-				logger.info("Empty change, searching description");
-				CauseAction cause = build.getAction(CauseAction.class);
-				author = cause.getShortDescription().replace("Started by user ", ""); //#YOLO #NotJank
-			} else {
-				author = entries.get(0).getAuthor().getDisplayName();
-			}
+			CauseAction cause = build.getAction(CauseAction.class);
+			author = cause.getShortDescription().replace("Started by user ", "").replace("Started by GitHub push by ", ""); //#YOLO #NotJank
+			
+			
 
 			//Get the list of Github/Hipchat users and parse them.
 			String usernames = notifier.getUsernameTable();

@@ -28,7 +28,6 @@
         <f:entry title="Notify Unstable">
             <f:checkbox name="hipChatNotifyUnstable" value="true" checked="${instance.getNotifyUnstable()}"/>
         </f:entry>
-
     </f:section>
 
 </j:jelly>
