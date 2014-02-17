@@ -186,8 +186,13 @@ public class ActiveNotifier implements FineGrainedNotifier {
 		public MessageBuilder appendUser() {		
 			String author = "";
 			CauseAction cause = build.getAction(CauseAction.class);
-			author = cause.getShortDescription().replace("Started by user ", "").replace("Started by GitHub push by ", ""); //#YOLO #NotJank
 			
+			if (cause.getShortDescription().contains("Started by upstream project"))
+			{
+				author = "here"; //Upstream projects don't have a specific user. Should notify the whole room.
+			} else {
+				author = cause.getShortDescription().replace("Started by user ", "").replace("Started by GitHub push by ", ""); //#YOLO #NotJank
+			}
 			
 
 			//Get the list of Github/Hipchat users and parse them.
